@@ -1,0 +1,398 @@
+:root{
+  --bg:#0c0d14;
+  --surface:#14162a;
+  --surface-2:#0f1224;
+  --text:#eef1fb;
+  --muted:#b1b6cf;
+
+  /* Paleta OT */
+  --ring-1:#ff2a8a; /* magenta */
+  --ring-2:#7b2cff; /* morado */
+  --ring-3:#39a8ff; /* azul */
+  --ot-pink:#ff2a8a;
+  --ot-purple:#7b2cff;
+  --ot-blue:#39a8ff;
+  --ot-cyan:#7ae1ff;
+  --ot-slate:#2a2f56;
+
+  --grad:linear-gradient(120deg,var(--ring-1),var(--ring-2) 55%,var(--ring-3));
+  --grad-ot: linear-gradient(120deg,var(--ot-pink),var(--ot-purple) 55%,var(--ot-blue));
+  --grad-pink-purple: linear-gradient(120deg,var(--ot-pink),var(--ot-purple));
+  --grad-purple-blue: linear-gradient(120deg,var(--ot-purple),var(--ot-blue));
+  --grad-blue-cyan: linear-gradient(120deg,var(--ot-blue),var(--ot-cyan));
+
+  --pill-bg:#1b1f3d;
+  --pill-br:#2a2f56;
+  --pill-on:#252a55;
+  --focus:#7aa7ff;
+
+  --r:14px;--r-sm:10px;--tap:46px;--gap:12px;
+  --anim:0.5s ease;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+}
+
+#root{
+  min-height:100%;
+}
+
+.appbar{
+  position:sticky;top:0;z-index:10;
+  background:var(--surface-2);
+  padding:12px 14px 10px;
+  border-bottom:1px solid #1f2446;
+}
+
+.brand{display:flex;align-items:center;gap:10px;}
+.badge{width:28px;height:28px;border-radius:8px;background:var(--grad);}
+.title{font-weight:800;}
+.sub{color:var(--muted);font-size:12px;margin-top:2px;}
+
+.container{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding:12px 14px 120px;
+}
+
+/* ===== Barra superior de acciones (nuevo) ===== */
+.actions-bar{
+  display:flex;
+  gap:10px;
+  padding:6px 0 4px;
+}
+.action-btn{
+  flex:1;
+  height:42px;
+  padding:0 12px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:opacity .25s ease, transform .1s ease, box-shadow .2s ease;
+}
+.action-btn:active{ transform:scale(.98); }
+.action-btn.primary{
+  color:#0a0a10;
+  background:var(--grad);
+  box-shadow:0 6px 16px rgba(0,0,0,.24);
+}
+.action-btn.ghost{
+  color:var(--text);
+  background:var(--surface-2);
+  border-color:var(--pill-br);
+}
+
+/* Card: borde degradado dependiente del voto (via clase JS) */
+.card{
+  position:relative;
+  border-radius:var(--r);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  transition:transform .1s, box-shadow .25s ease;
+
+  /* doble fondo: surface (relleno) + acento (borde) */
+  border:1px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--card-accent, linear-gradient(#212654,#212654)) border-box;
+}
+.card:hover{ box-shadow:0 6px 16px rgba(0,0,0,.25); }
+.card:active{transform:scale(.98);}
+
+/* Variantes por voto */
+.card.vote-nominado{ --card-accent: var(--grad-blue-cyan); }
+.card.vote-mehnera{  --card-accent: linear-gradient(120deg,#4c527a,#6a7099); }
+.card.vote-okey{     --card-accent: var(--grad-purple-blue); }
+.card.vote-chichosa{ --card-accent: var(--grad-pink-purple); }
+.card.vote-absolute-cinema{
+  --card-accent: var(--grad-ot);
+  box-shadow:0 0 0 1px #545cae inset, 0 8px 22px rgba(123,44,255,.25);
+}
+
+.avatar-wrap{
+  position:relative;
+  width:64px;
+  height:64px;
+  border-radius:12px;
+  background:var(--grad);
+  padding:2px;
+}
+.avatar{
+  width:100%;
+  height:100%;
+  border-radius:10px;
+  object-fit:cover;
+  object-position:left top;
+}
+.info{flex:1;}
+.name{font-weight:700;}
+
+/* Chip de estado con tinte por voto */
+.vote-status{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:10px;
+  font-size:12px;
+  margin-top:6px;
+  background:#0f132e;
+  border:1px solid #2a2f5a;
+  color:var(--muted);
+}
+.card.vote-nominado .vote-status{ border-color:#2b6fb1;}
+.card.vote-mehnera  .vote-status{ border-color:#5a628e;}
+.card.vote-okey     .vote-status{ border-color:#4a57c9;}
+.card.vote-chichosa .vote-status{ border-color:#a24ad1;}
+.card.vote-absolute-cinema .vote-status{ border-color:#7b2cff;}
+
+/* hoja inferior integrada */
+.sheet{
+  background:var(--surface-2);
+  border-radius:20px;
+  border-top:3px solid transparent;
+  background-clip:padding-box,border-box;
+  background-origin:border-box;
+  background-image:linear-gradient(var(--surface-2),var(--surface-2)),var(--grad);
+  padding:16px;
+  overflow:hidden;
+  opacity:0;
+  height:0;
+  transition:height var(--anim),opacity var(--anim);
+}
+.sheet.active{
+  opacity:1;
+  height:auto;
+}
+.sheet h3{
+  margin:0 0 10px 0;
+  font-size:16px;
+}
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* Botones por opción con acentos OT */
+.option-btn{
+  position:relative;
+  background:var(--pill-bg);
+  border:1px solid var(--pill-br);
+  border-radius:var(--r-sm);
+  padding:12px;
+  color:#e9edff;
+  font-weight:600;
+  text-align:center;
+  cursor:pointer;
+  transition:background var(--anim),border var(--anim), box-shadow var(--anim);
+}
+.option-btn:hover{
+  color:#fff;
+  background:var(--pill-on);
+  box-shadow:inset 0 0 0 1px rgba(84,92,174,.35);
+}
+.option-btn.selected{
+  color:#fff;
+  background:var(--pill-on);
+  border-color:#3d4383;
+  box-shadow:inset 0 0 0 1px #545cae;
+}
+
+/* Nominado */
+.option-btn[data-value="Nominado"]{
+  background:#18233a;border-color:#234a72;
+}
+.option-btn[data-value="Nominado"].selected,
+.option-btn[data-value="Nominado"]:hover{
+  background:
+    linear-gradient(#161a33,#161a33) padding-box,
+    var(--grad-blue-cyan) border-box;
+  border:1px solid transparent;
+}
+
+/* Mehñera (neutro) */
+.option-btn[data-value="Mehñera"]{
+  background:#1b1f3d;border-color:#3a3f6b;
+}
+.option-btn[data-value="Mehñera"].selected,
+.option-btn[data-value="Mehñera"]:hover{
+  background:
+    linear-gradient(#1a1e39,#1a1e39) padding-box,
+    linear-gradient(120deg,#4c527a,#6a7099) border-box;
+  border:1px solid transparent;
+}
+
+/* Okey */
+.option-btn[data-value="Okey"]{
+  background:#1b1e3b;border-color:#334098;
+}
+.option-btn[data-value="Okey"].selected,
+.option-btn[data-value="Okey"]:hover{
+  background:
+    linear-gradient(#171a34,#171a34) padding-box,
+    var(--grad-purple-blue) border-box;
+  border:1px solid transparent;
+}
+
+/* Chichosa */
+.option-btn[data-value="Chichosa"]{
+  background:#261b36;border-color:#7b2cff66;
+}
+.option-btn[data-value="Chichosa"].selected,
+.option-btn[data-value="Chichosa"]:hover{
+  background:
+    linear-gradient(#1a1631,#1a1631) padding-box,
+    var(--grad-pink-purple) border-box;
+  border:1px solid transparent;
+}
+
+/* Absolute Cinema */
+.option-btn[data-value="Absolute Cinema"]{
+  background:#221b3b;border-color:#7b2cff88;
+}
+.option-btn[data-value="Absolute Cinema"].selected,
+.option-btn[data-value="Absolute Cinema"]:hover{
+  background:
+    linear-gradient(#191636,#191636) padding-box,
+    var(--grad-ot) border-box;
+  border:1px solid transparent;
+  box-shadow:inset 0 0 0 1px rgba(84,92,174,.45),
+             0 6px 18px rgba(123,44,255,.25);
+}
+
+/* animación suave */
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-5px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.sheet.active .options{animation:slideDown .6s ease;}
+
+/* Expulsados: B/N y sin interacción */
+.card.expulsado{
+  --card-accent: linear-gradient(#212654,#212654);
+  filter:grayscale(1);
+  opacity:0.5;
+  pointer-events:none;
+}
+
+/* ===== Modal (resumen compartible) ===== */
+.modal-overlay{
+  position:fixed; inset:0; z-index:30;
+  background:rgba(0,0,0,.55);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+}
+.modal-overlay.open{ opacity:1; pointer-events:auto; }
+
+/* Caja modal */
+.modal{
+  width:min(720px, 92vw);
+  max-height:88vh;
+  background:
+    linear-gradient(var(--surface-2),var(--surface-2)) padding-box,
+    var(--grad) border-box;
+  border:1px solid transparent;
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  display:flex; flex-direction:column; gap:12px;
+}
+
+/* Cabecera y acciones */
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+}
+.modal-title{ font-weight:800; }
+.modal-actions{ display:flex; gap:10px; }
+.modal-btn{
+  padding:10px 12px;
+  border:0;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.modal-btn.primary{ color:#0a0a10; background:var(--grad); }
+.modal-btn.ghost{ color:var(--text); background:#1a1e39; border:1px solid #2a2f56; }
+
+/* Área capturable (para exportar imagen) */
+#captureArea{
+  background:var(--surface);
+  border-radius:14px;
+  padding:12px;
+  border:1px solid #212654;
+}
+
+/* Grid de mini-cards */
+.summary-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+@media (min-width:480px){ .summary-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width:640px){ .summary-grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* Mini-card (usa mismas variantes OT por voto) */
+.mini-card{
+  position:relative;
+  border-radius:12px;
+  padding:10px;
+  display:flex; align-items:center; gap:10px;
+  border:1px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--card-accent, linear-gradient(#212654,#212654)) border-box;
+}
+.mini-avatar-wrap{
+  width:56px; height:56px; border-radius:12px; background:var(--grad); padding:2px; flex:0 0 auto;
+}
+.mini-avatar{
+  width:100%; height:100%; border-radius:10px; object-fit:cover; object-position:left top;
+  display:block;
+}
+.mini-info{ min-width:0; }
+.mini-name{ font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mini-vote{
+  display:inline-block; margin-top:4px; font-size:11px;
+  padding:3px 6px; border-radius:999px;
+  background:#0f132e; border:1px solid #2a2f5a; color:var(--muted);
+}
+
+/* Acentos por voto para mini-card */
+.mini-card.vote-nominado{ --card-accent: var(--grad-blue-cyan); }
+.mini-card.vote-mehnera{  --card-accent: linear-gradient(120deg,#4c527a,#6a7099); }
+.mini-card.vote-okey{     --card-accent: var(--grad-purple-blue); }
+.mini-card.vote-chichosa{ --card-accent: var(--grad-pink-purple); }
+.mini-card.vote-absolute-cinema{
+  --card-accent: var(--grad-ot);
+  box-shadow:0 0 0 1px #545cae inset, 0 4px 14px rgba(123,44,255,.22);
+}
+.mini-card.expulsado{
+  --card-accent: linear-gradient(#212654,#212654);
+  filter:grayscale(1); opacity:.6;
+}
+
+.action-btn.danger {
+  background: linear-gradient(120deg,#ff2a8a,#7b2cff);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255,42,138,.25);
+}
+.action-btn.danger:active {
+  transform: scale(.97);
+  opacity: .9;
+}

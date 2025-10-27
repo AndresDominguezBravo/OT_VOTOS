@@ -12,7 +12,7 @@ const CONCURSANTES = [
     {id:"guille-toledano",nombre:"Guille Toledano",foto:"https://los40.com/resizer/v2/MNLQENJLWJFSPLFX72PPDKNGVQ.png?auth=e1d44240b5ada443efa4c04404650f1e3bef81a0297b8026b575f2701e4a2976&quality=70&width=650&height=928&smart=true",expulsado:false},
     {id:"laura-munoz",nombre:"Laura Muñoz",foto:"https://los40.com/resizer/v2/3VTPFD2OWZEKTADTEUADLJLXHA.png?auth=b996ecf836daa215293b001c157c7b0440714dd96c08182a780205c0625f9392&quality=70&width=650&height=928&smart=true",expulsado:false},
     {id:"carlos",nombre:"Carlos",foto:"https://los40.com/resizer/v2/6FB2S52NPJF6DHRFOJX72YOAZA.png?auth=600a8f71347c0e7e012973303e74289464c820b875a9ce3bd619c8c78cd30f62&quality=70&width=650&height=929&smart=true",expulsado:true},
-    {id:"judit",nombre:"Judit",foto:"https://los40.com/resizer/v2/3LZFQ6JHGRFBFP4PCX2RDPTCSI.png?auth=b065b9348394e3ea4bf29bfabae51bde91126ffa243b9985e5a6ecd472486d42&quality=70&width=650&height=928&smart=true",expulsado:false},
+    {id:"judit",nombre:"Judit",foto:"https://los40.com/resizer/v2/3LZFQ6JHGRFBFP4PCX2RDPTCSI.png?auth=b065b9348394e3ea4bf29bfabae51bde91126ffa243b9985e5a6ecd472486d42&quality=70&width=650&height=928&smart=true",expulsado:true},
     {id:"cristina",nombre:"Cristina",foto:"https://los40.com/resizer/v2/A4FLPLTFRZBJJG7OS26X65JAFM.png?auth=cd319ea95acfac4929f86ca346983ad37c905eb4b6ff2b4a7912b948e4e21456&quality=70&width=650&height=928&smart=true",expulsado:false},
     {id:"ivan-rojo",nombre:"Iván Rojo",foto:"https://los40.com/resizer/v2/ZUFIZW2YPBCBFONTDWYN56KRLQ.png?auth=7ce19c9074d6ab5a4b47bc892b137140c46c281c3796ad30a06a219e5966415b&quality=70&width=650&height=928&smart=true",expulsado:true},
     {id:"salma-diego",nombre:"Salma de Diego",foto:"https://los40.com/resizer/v2/WJMDZ4R5AFF2PFYBY7HQ3CIIXM.png?auth=383563e97f75cd56ec9eab3c4e00e609abb129163699928dbd919adc6fd668ea&quality=70&width=650&height=928&smart=true",expulsado:true},
@@ -34,6 +34,14 @@ const CONCURSANTES = [
   const votos = JSON.parse(localStorage.getItem('votosOT') || '{}');
   let showExpulsados = false;
   
+  function clearVotes(){
+    Object.keys(votos).forEach(key => delete votos[key]);
+    localStorage.removeItem('votosOT');
+    const sheet = document.querySelector('.sheet');
+    if (sheet) sheet.remove();
+    renderCards();
+  }
+
   /* ======================== BARRA DE ACCIONES ======================== */
   /* Garantiza que la barra exista y que SIEMPRE tenga listeners */
   function ensureActionsBar(){
@@ -44,20 +52,38 @@ const CONCURSANTES = [
       bar.innerHTML = `
         <button id="toggleExpulsadosBtn" class="action-btn ghost" type="button">Mostrar expulsados</button>
         <button id="shareBtn" class="action-btn primary" type="button">Compartir votos</button>
+        <button id="resetBtn" class="action-btn danger" type="button">Reiniciar votos</button>
       `;
       container.prepend(bar);
+    } else if (!bar.querySelector('#resetBtn')) {
+      const resetBtn = document.createElement('button');
+      resetBtn.id = 'resetBtn';
+      resetBtn.type = 'button';
+      resetBtn.className = 'action-btn danger';
+      resetBtn.textContent = 'Reiniciar votos';
+      bar.appendChild(resetBtn);
     }
     // (Re)atach listeners en cada render
     const btnToggle = bar.querySelector('#toggleExpulsadosBtn');
     const btnShare  = bar.querySelector('#shareBtn');
-  
+    const btnReset  = bar.querySelector('#resetBtn');
+    
+    btnToggle.textContent = showExpulsados ? 'Ocultar expulsados' : 'Mostrar expulsados';
     btnToggle.onclick = () => {
       showExpulsados = !showExpulsados;
       btnToggle.textContent = showExpulsados ? 'Ocultar expulsados' : 'Mostrar expulsados';
       renderCards();
     };
     btnShare.onclick = openSummaryModal;
-  
+    btnReset.onclick = () => {
+      if (!Object.keys(votos).length) {
+        clearVotes();
+        return;
+      }
+      const confirmed = window.confirm('Seguro que quieres reiniciar tus votos?');
+      if (confirmed) clearVotes();
+    };
+    
     return bar;
   }
   

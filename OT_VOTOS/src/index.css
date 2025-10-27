@@ -329,6 +329,11 @@ html,body{
 }
 .modal-btn.primary{ color:#0a0a10; background:var(--grad); }
 .modal-btn.ghost{ color:var(--text); background:#1a1e39; border:1px solid #2a2f56; }
+.modal-btn.danger{
+  color:#fff;
+  background:linear-gradient(120deg,#ff2a8a,#7b2cff);
+  box-shadow:0 0 12px rgba(255,42,138,.25);
+}
 
 /* Área capturable (para exportar imagen) */
 #captureArea{

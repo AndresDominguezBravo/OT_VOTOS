@@ -1,16 +1,36 @@
-# React + Vite
+# OT Votos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación para recopilar y visualizar resultados de votaciones de Operación Triunfo. Construida con React y Vite, y desplegada automáticamente en GitHub Pages.
 
-Currently, two official plugins are available:
+- Sitio público: https://andresdominguezbravo.github.io/OT_VOTOS/
+- Rama de despliegue: `gh-pages`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requisitos
 
-## React Compiler
+- Node.js 22 (o superior) y npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Scripts
 
-## Expanding the ESLint configuration
+```bash
+npm install      # instala dependencias
+npm run dev      # arranca el servidor local en http://localhost:5173
+npm run build    # genera la versión de producción en dist/
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Flujo de despliegue
+
+1. Haz commit en la rama principal (`main` por defecto).
+2. Empuja los cambios a GitHub.
+3. El workflow `.github/workflows/deploy.yml` ejecuta:
+   - `npm ci`
+   - `npm run build`
+   - Publica `dist/` en la rama `gh-pages` usando `peaceiris/actions-gh-pages`.
+4. GitHub Pages actualiza el sitio en `https://andresdominguezbravo.github.io/OT_VOTOS/`.
+
+Si necesitas desplegar manualmente (por ejemplo, desde tu máquina local) puedes usar:
+
+```bash
+npm run deploy
+```
+
+Ese comando genera el build y lo publica en la rama `gh-pages`.
